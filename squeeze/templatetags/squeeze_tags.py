@@ -19,7 +19,7 @@ register = template.Library()
 
 def gettime(filename):
     time = localtime(getmtime(filename))
-    return strftime('%Y%m%d%H%M', time)
+    return strftime('%Y%m%d%H%M%S', time)
 
 
 class SqueezeNode(template.Node):
@@ -71,7 +71,6 @@ class SqueezeNode(template.Node):
         return return_tag
 
 
-@register.tag
 def css_squeeze(parser, token):
     """
     {% css_squeeze "css/dynamic_minifyed.css" "css/style1.css,css/style2.css" %}
@@ -84,7 +83,6 @@ def css_squeeze(parser, token):
     return SqueezeNode('css', *bits[1:])
 
 
-@register.tag
 def js_squeeze(parser, token):
     """
     {% js_squeeze "js/dynamic_minifyed.js" "js/script1.js,js/script2.js" %}
@@ -95,3 +93,5 @@ def js_squeeze(parser, token):
         raise template.TemplateSyntaxError, "%r tag requires exactly two arguments" % bits[0]
     return SqueezeNode('js', *bits[1:])
 
+register.tag(css_squeeze)
+register.tag(js_squeeze)
